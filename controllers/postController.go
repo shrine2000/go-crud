@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"net/http"
-
+	"github.com/gin-gonic/gin"
 	"go-crud/m/intializers"
 	"go-crud/m/models"
-
-	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func PostCreate(c *gin.Context) {
@@ -16,13 +14,16 @@ func PostCreate(c *gin.Context) {
 		Title string
 	}
 
-	c.Bind(&body)
+	err := c.Bind(&body)
+	if err != nil {
+		return
+	}
 
 	post := models.Post{Title: body.Title, Body: body.Body}
 	createResult := intializers.DB.Create(&post)
 
 	if createResult.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, createResult.Error)
+		_ = c.AbortWithError(http.StatusBadRequest, createResult.Error)
 		return
 	}
 
@@ -62,13 +63,16 @@ func PostUpdate(c *gin.Context) {
 		Title string
 	}
 
-	c.Bind(&body)
+	err := c.Bind(&body)
+	if err != nil {
+		return
+	}
 
 	var post models.Post
 	result := intializers.DB.First(&post, id)
 
 	if result.Error != nil {
-		c.AbortWithError(http.StatusNotFound, result.Error)
+		_ = c.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
@@ -77,7 +81,7 @@ func PostUpdate(c *gin.Context) {
 	updateResult := intializers.DB.Save(&post)
 
 	if updateResult.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, updateResult.Error)
+		_ = c.AbortWithError(http.StatusBadRequest, updateResult.Error)
 		return
 	}
 
@@ -94,14 +98,14 @@ func PostDelete(c *gin.Context) {
 	result := intializers.DB.First(&post, id)
 
 	if result.Error != nil {
-		c.AbortWithError(http.StatusNotFound, result.Error)
+		_ = c.AbortWithError(http.StatusNotFound, result.Error)
 		return
 	}
 
 	deleteResult := intializers.DB.Delete(&post)
 
 	if deleteResult.Error != nil {
-		c.AbortWithError(http.StatusBadRequest, deleteResult.Error)
+		_ = c.AbortWithError(http.StatusBadRequest, deleteResult.Error)
 		return
 	}
 

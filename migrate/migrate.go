@@ -11,5 +11,8 @@ func init() {
 }
 
 func main() {
-	intializers.DB.AutoMigrate(&models.Post{})
+	err := intializers.DB.AutoMigrate(&models.Post{})
+	if err != nil {
+		return 
+	}
 }
