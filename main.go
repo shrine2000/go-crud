@@ -1,10 +1,9 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"go-crud/m/controllers"
 	"go-crud/m/intializers"
-
-	"github.com/gin-gonic/gin"
 )
 
 func init() {
